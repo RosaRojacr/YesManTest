@@ -7,3 +7,4 @@ HF_TOKEN
 results/*.json
 notebooks/*.ipynb
 !notebooks/.gitkeep
+Model Cache/

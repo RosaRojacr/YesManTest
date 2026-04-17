@@ -1,0 +1,21 @@
+target_models:
+  - name: "mistralai/Mistral-7B-Instruct-v0.3"
+    quantization: "4bit"
+    max_new_tokens: 300
+    cache_dir: "R:\\Golemancy\\Model Cache"
+  - name: "Intel/neural-chat-7b-v3-3"
+    quantization: "4bit"
+    max_new_tokens: 300
+    cache_dir: "R:\\Golemancy\\Model Cache"
+  - name: "HuggingFaceH4/zephyr-7b-beta"
+    quantization: "4bit"
+    max_new_tokens: 300
+    cache_dir: "R:\\Golemancy\\Model Cache"
+  - name: "Qwen/Qwen2.5-7B-Instruct"
+    quantization: "4bit"
+    max_new_tokens: 300
+    cache_dir: "R:\\Golemancy\\Model Cache"
+  - name: "openchat/openchat-3.5-0106"
+    quantization: "4bit"
+    max_new_tokens: 300
+    cache_dir: "R:\\Golemancy\\Model Cache"
