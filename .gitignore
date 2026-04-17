@@ -1,10 +1,7 @@
-__pycache__/
-*.pyc
-.ipynb_checkpoints/
-*.egg-info/
-.env
-HF_TOKEN
-results/*.json
-notebooks/*.ipynb
-!notebooks/.gitkeep
-Model Cache/
+Authentication/ 
+Model Cache/ 
+results/ 
+offload_temp/ 
+__pycache__/ 
+*.pyc 
+.ipynb_checkpoints/ 
