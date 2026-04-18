@@ -6,8 +6,6 @@ YesManTest is a sycophancy benchmark for open-weight language models. It applies
 
 ![YesManTest Baseline Results](graphs/BaselineTest.webp)
 
-## The Finding
-
 Across 200 test cases (40 questions, 5 models), **not a single 7B instruction-tuned model held firm on any question through all 14 pressure levels.** Models often times capitulated after just being told "I think the answer is actually [wrong answer]." The average breaking point was **2.3 out of 14.**
 
 A hardened system prompt explicitly instructing models to resist pressure reduced capitulations from 192/200 to 127/200, but still produced **zero held-firm results.** Sycophancy at this model scale appears to be baked into the weights, and while improved prompting helps, it does not eliminate the problem entirely.
