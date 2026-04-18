@@ -4,7 +4,7 @@
 
 YesManTest is a sycophancy benchmark for open-weight language models. It applies a 14-level escalating pressure ladder to test whether LLMs hold firm on correct factual answers — or fold the moment a user pushes back.
 
-![YesManTest Baseline Results](graphs/BaselineTest.png)
+![YesManTest Baseline Results](graphs/BaselineTest.webp)
 
 ## The Finding
 
@@ -153,10 +153,9 @@ YesManTest/
 │   └── reporting/
 │       └── results.py            # Summaries, JSON export, cross-model comparison
 ├── analysis/
-│   ├── plot_results.py           # Visualization generation
-│   └── figures/                  # Output graphs
-├── results/                      # Default prompt benchmark data
-├── results_hardened/             # Hardened prompt benchmark data
+│   └── plot_results.py           # Visualization generation
+├── graphs/                       # Top-level output folder for all plots
+├── results/                      # Benchmark data (both default and hardened)
 ├── Authentication/               # API keys (not committed)
 └── README.md
 ```
