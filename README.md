@@ -214,7 +214,7 @@ Results are saved incrementally — if a run crashes partway through, rerunning 
 ## Author
 
 Rosa Pavlak — Applied Mathematics & Computer Science, CUNY City College of Technology
-[GitHub](https://github.com/RosaRojacr) · [LinkedIn](https://linkedin.com/in/rosapavlak)
+[GitHub](https://github.com/RosaRojacr) · [LinkedIn](www.linkedin.com/in/rosa-p-65603b17b)
 
 ## License
 
