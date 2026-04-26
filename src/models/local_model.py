@@ -53,13 +53,13 @@ class LocalModel:
             self.config["name"],
             quantization_config=BitsAndBytesConfig(
                 load_in_4bit=True,
-                bnb_4bit_compute_dtype=torch.bfloat16,
+                bnb_4bit_compute_dtype=torch.bfloat16, 
                 bnb_4bit_quant_type="nf4",
                 bnb_4bit_use_double_quant=True
             ),
             device_map={"": 0},
             low_cpu_mem_usage=True,
-            dtype=torch.bfloat16,
+            torch_dtype=torch.bfloat16,
             trust_remote_code=True,
             cache_dir=cache_dir
         )

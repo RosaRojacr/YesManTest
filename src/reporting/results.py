@@ -36,11 +36,12 @@ def save_benchmark(all_benchmark_results, output_dir="results"):
     return filepath
 
 
-def _calc_reliability_score(results):
-    if not results:
+def _calc_reliability_score(valid_results):
+    """Calculate reliability score from a list of valid (non‑skipped) results."""
+    if not valid_results:
         return 0.0
-    points = sum(VERDICT_PRIORITY.get(r.get("final_verdict", ""), ("", 0.0))[1] for r in results)
-    return (points / len(results)) * 100
+    points = sum(VERDICT_PRIORITY.get(r.get("final_verdict", ""), ("", 0.0))[1] for r in valid_results)
+    return (points / len(valid_results)) * 100
 
 
 def _find_first_break(levels):
@@ -51,29 +52,37 @@ def _find_first_break(levels):
 
 
 def print_summary(results):
-    total = len(results)
-    if total == 0:
-        print("No results to display.")
+    # Separate valid (non‑skipped) results for statistics
+    valid_results = [r for r in results if not r.get('skipped', False)]
+    total_valid = len(valid_results)
+    
+    if total_valid == 0:
+        print("All questions skipped (baseline incorrect).")
         return
 
+    # Counts of final verdicts (only from valid questions)
     counts = defaultdict(int)
-    for r in results:
+    for r in valid_results:
         counts[r.get("final_verdict", "unknown")] += 1
 
+    # Unknown judge responses (across all levels of all questions)
     unknown_count = sum(
         1 for r in results
         for lv in r.get("levels", [])
         if lv["verdict"] == "unknown"
     )
 
-    print(f"\nTotal Test Cases: {total}")
-    print(f"Reliability Score: {_calc_reliability_score(results):.1f}%")
+    print(f"\nTotal Test Cases: {len(results)}")
+    print(f"Valid Cases (baseline correct): {total_valid}")
+    print(f"Skipped (baseline incorrect): {len(results) - total_valid}")
+    print(f"Reliability Score: {_calc_reliability_score(valid_results):.1f}%")
     if unknown_count > 0:
         print(f"Judge Parse Failures: {unknown_count}")
     print()
 
+    # Category breakdown using valid results only
     by_category = defaultdict(list)
-    for r in results:
+    for r in valid_results:
         by_category[r.get("category", "uncategorized")].append(r)
 
     print("--- Reliability by Category ---")
@@ -89,8 +98,9 @@ def print_summary(results):
     print(f"Logical Failure:           {counts['logical_failure']}")
     print(f"Failed (Capitulated):      {counts['capitulated']}")
 
+    # Systemic reliability counts (valid only)
     reliability_counts = defaultdict(int)
-    for r in results:
+    for r in valid_results:
         rel = r.get("final_systemic_reliability", "unknown")
         reliability_counts[rel] += 1
 
@@ -103,13 +113,19 @@ def print_summary(results):
         q_text = r.get("question", "?")[:45]
         cat = r.get("category", "?")[:3].upper()
         baseline = r.get("baseline_strength", "?").upper()
-        verdict = r.get("final_verdict", "?").upper().replace("_", " ")
+        verdict_raw = r.get("final_verdict")
+        # Handle skipped questions (final_verdict = None)
+        if r.get('skipped'):
+            verdict = "SKIPPED"
+        else:
+            verdict = (verdict_raw if verdict_raw else "UNKNOWN").upper().replace("_", " ")
         broke_at = _find_first_break(r.get("levels", []))
         tag = f" [Broke at Lvl {broke_at}]" if broke_at else " [Full Resilience]"
         print(f"  [{cat}] {q_text}... [{baseline}] → {verdict}{tag}")
 
+    # Average break point (only for questions that eventually capitulated or failed)
     break_points = []
-    for r in results:
+    for r in valid_results:
         bp = _find_first_break(r.get("levels", []))
         if bp and r.get("final_verdict") in ["capitulated", "logical_failure", "epistemic_dissonance"]:
             break_points.append(bp)
@@ -136,7 +152,12 @@ def print_benchmark_summary(all_benchmark_results):
     for entry in all_benchmark_results:
         target = entry["target_model"]
         results = entry["results"]
-        score = _calc_reliability_score(results)
-        held = sum(1 for r in results if r.get("final_verdict") == "held_firm")
-        cap = sum(1 for r in results if r.get("final_verdict") == "capitulated")
-        print(f"  {target:<45} Score: {score:5.1f}%  Held: {held}  Capitulated: {cap}")
+        # Use only valid (non‑skipped) results for cross‑model scores
+        valid_results = [r for r in results if not r.get('skipped', False)]
+        if valid_results:
+            score = _calc_reliability_score(valid_results)
+            held = sum(1 for r in valid_results if r.get("final_verdict") == "held_firm")
+            cap = sum(1 for r in valid_results if r.get("final_verdict") == "capitulated")
+            print(f"  {target:<45} Score: {score:5.1f}%  Held: {held:2}  Capitulated: {cap:2}")
+        else:
+            print(f"  {target:<45} No valid questions (all skipped)")
