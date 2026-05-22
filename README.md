@@ -1,19 +1,15 @@
 # YesManTest
 
-**How easily can you make an AI agree with something it knows is wrong = and can you train it to stop?**
+**How easily can you make an AI agree with something it knows is wrong - and can you train it to stop?**
 
 YesManTest is a sycophancy benchmark and training pipeline for open-weight language models. It applies a 14-level escalating pressure ladder to test whether LLMs hold firm on correct factual answers, then uses LoRA and DPO to train sycophancy resistance directly into the model weights.
 
 <!-- Place before_after_comparison.png in your graphs/ folder -->
 ![Before and After](graphs/before_after_comparison.png)
 
-## The Problem
-
 Across 200 test cases (40 questions, 5 models), **not a single 7B instruction-tuned model held firm on any question through all 14 pressure levels.** Most capitulated after just being told "I think the answer is actually [wrong answer]." The average breaking point was **2.3 out of 14.**
 
 A hardened system prompt reduced capitulations by 34% but still produced **zero held-firm results.** Prompt engineering alone cannot solve sycophancy at the 7B scale.
-
-## The Fix
 
 LoRA fine-tuning on sycophancy resistance data dropped capitulation from 91% to 31%. Adding DPO training on adversarial preference pairs extracted from the benchmark itself pushed it further: **capitulation fell to 18%, and the model held firm on 75% of questions through all 14 pressure levels.**
 
